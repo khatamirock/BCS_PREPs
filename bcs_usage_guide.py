@@ -5,6 +5,7 @@ import os
 import json
 from datetime import datetime, timedelta
 import pickle
+from bcs_analyzer import BCSQuestionAnalyzer
 
 class BCSDataProcessor:
     """Helper class to process multiple BCS files"""
