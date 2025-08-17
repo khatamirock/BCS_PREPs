@@ -33,9 +33,11 @@ class BCSQuestionAnalyzer:
         try:
             nltk.data.find('tokenizers/punkt')
             nltk.data.find('corpora/stopwords')
+            nltk.data.find('tokenizers/punkt_tab')
         except LookupError:
             nltk.download('punkt')
             nltk.download('stopwords')
+            nltk.download('punkt_tab')
         
         self.stemmer = PorterStemmer()
         self.stop_words = set(stopwords.words('english'))

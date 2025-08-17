@@ -3,9 +3,22 @@
 
 import os
 import json
+import numpy as np
 from datetime import datetime, timedelta
 import pickle
+import re
 from bcs_analyzer import BCSQuestionAnalyzer
+
+class NumpyEncoder(json.JSONEncoder):
+    """ Special json encoder for numpy types """
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 class BCSDataProcessor:
     """Helper class to process multiple BCS files"""
@@ -345,14 +358,14 @@ class AdvancedBCSAnalyzer(BCSQuestionAnalyzer):
         }
         
         with open(json_filename, 'w', encoding='utf-8') as f:
-            json.dump(export_data, f, indent=2, ensure_ascii=False)
+            json.dump(export_data, f, indent=2, ensure_ascii=False, cls=NumpyEncoder)
         
         # Export study plan
         study_plan = self.generate_personalized_study_plan()
         plan_filename = f"study_plan_{timestamp}.json"
         
         with open(plan_filename, 'w', encoding='utf-8') as f:
-            json.dump(study_plan, f, indent=2, ensure_ascii=False)
+            json.dump(study_plan, f, indent=2, ensure_ascii=False, cls=NumpyEncoder)
         
         print(f"Reports exported:")
         print(f"  - HTML Report: {report_filename}")

@@ -1,7 +1,7 @@
 import os
 from bcs_analyzer import BCSQuestionAnalyzer
 from bcs_usage_guide import BCSDataProcessor, AdvancedBCSAnalyzer
-
+import re
 def validate_tsv_format(content):
     """Validate if the content follows proper TSV format for BCS questions"""
     lines = content.strip().split('\n')
