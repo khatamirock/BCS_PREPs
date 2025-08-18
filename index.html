@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Topics Analysis Dashboard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <title>BCS Examination Topics - Comprehensive Visualization</title>
     <style>
         * {
             margin: 0;
@@ -13,10 +12,10 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             color: #333;
-            line-height: 1.6;
         }
 
         .container {
@@ -28,214 +27,260 @@
         .header {
             text-align: center;
             margin-bottom: 30px;
-            background: rgba(255,255,255,0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
+            color: white;
         }
 
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
 
-        .chart-container {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            position: relative; 
-            height: 400px;
-        }
-
-        .chart-container:hover {
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
-
-        .chart-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #4a5568;
-        }
-
-        .detailed-breakdown {
+        .main-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 25px;
-            margin-top: 30px;
-        }
-
-        .topic-card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            border-left: 5px solid;
-        }
-
-        .topic-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
-
-        .topic-card.bangla { border-left-color: #e53e3e; }
-        .topic-card.english { border-left-color: #3182ce; }
-        .topic-card.math { border-left-color: #38a169; }
-        .topic-card.science { border-left-color: #805ad5; }
-        .topic-card.computer { border-left-color: #d69e2e; }
-        .topic-card.bangladesh { border-left-color: #dd6b20; }
-        .topic-card.international { border-left-color: #319795; }
-        .topic-card.ethics { border-left-color: #e53e3e; }
-        .topic-card.mental { border-left-color: #38b2ac; }
-
-        .topic-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .topic-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #2d3748;
-        }
-
-        .importance-badge {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .subtopic-list {
-            list-style: none;
-        }
-
-        .subtopic-item {
-            margin-bottom: 12px;
-            padding: 10px 15px;
-            background: rgba(74, 85, 104, 0.05);
-            border-radius: 10px;
-            border-left: 3px solid #cbd5e0;
-            transition: all 0.2s ease;
-        }
-
-        .subtopic-item:hover {
-            background: rgba(74, 85, 104, 0.1);
-            border-left-color: #667eea;
-            transform: translateX(5px);
-        }
-
-        .subtopic-title {
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 5px;
-        }
-
-        .subtopic-details {
-            font-size: 0.9rem;
-            color: #718096;
-            line-height: 1.5;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
             margin-bottom: 30px;
         }
 
-        .metric-card {
-            background: rgba(255,255,255,0.95);
+        .subject-card {
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .subject-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subject-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .bangla { background: #e74c3c; }
+        .english { background: #3498db; }
+        .math { background: #f39c12; }
+        .science { background: #27ae60; }
+        .computer { background: #9b59b6; }
+        .bangladesh { background: #1abc9c; }
+        .international { background: #34495e; }
+        .ethics { background: #e67e22; }
+        .mental { background: #95a5a6; }
+
+        .main-topic {
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+
+        .main-topic-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .main-topic-title:hover {
+            color: #1abc9c;
+        }
+
+        .toggle-icon {
+            font-size: 0.8rem;
             transition: transform 0.3s ease;
         }
 
-        .metric-card:hover {
-            transform: translateY(-3px);
+        .subtopics {
+            margin-left: 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.3s ease;
+            opacity: 0;
         }
 
-        .metric-number {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .subtopics.expanded {
+            max-height: 1000px;
+            opacity: 1;
         }
 
-        .metric-label {
-            font-size: 0.9rem;
-            color: #718096;
-            margin-top: 5px;
+        .subtopic {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #1abc9c;
+            transition: background-color 0.3s ease;
+        }
+
+        .subtopic:hover {
+            background: #e3f2fd;
+        }
+
+        .subtopic-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .subtopic-details {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            line-height: 1.4;
         }
 
         .trends-section {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
             padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             margin-top: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
         }
 
         .trends-title {
             font-size: 1.8rem;
-            font-weight: 700;
+            color: #2c3e50;
             margin-bottom: 20px;
-            color: #2d3748;
             text-align: center;
+            position: relative;
+        }
+
+        .trends-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 2px;
         }
 
         .trend-item {
             margin-bottom: 15px;
             padding: 15px;
-            background: rgba(74, 85, 104, 0.05);
+            background: #f8f9fa;
             border-radius: 10px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #e74c3c;
         }
 
         .trend-title {
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .trend-description {
+            color: #7f8c8d;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .expand-all, .collapse-all {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .expand-all:hover, .collapse-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .detailed-breakdown {
+            .main-grid {
                 grid-template-columns: 1fr;
             }
             
             .header h1 {
                 font-size: 2rem;
+            }
+            
+            .subject-card {
+                padding: 20px;
             }
         }
     </style>
@@ -243,403 +288,1006 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Comprehensive Exam Topics Analysis</h1>
-            <p>Based on Sources 36-46 Analysis with Importance Metrics & Trends</p>
+            <h1>BCS Examination Topics</h1>
+            <p>Comprehensive Analysis of Most Important Topics & Subtopics (Sources 36-46)</p>
         </div>
-    <div style="margin-top: 15px;">
-        <a href="Gk_special.html" style="
-            display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        ">View GK Special Guide →</a>
-    </div>
-    <div style="margin-top: 15px;">
-        <a href="indx2.html" style="
-            display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        ">View index 2 guide →</a>
-    </div>
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-number">9</div>
-                <div class="metric-label">Major Topics</div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">9</div>
+                <div class="stat-label">Major Subjects</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-number">67</div>
-                <div class="metric-label">Subtopics</div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Main Topics</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-number">8</div>
-                <div class="metric-label">Key Trends</div>
+            <div class="stat-card">
+                <div class="stat-number">200+</div>
+                <div class="stat-label">Subtopics</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-number">100%</div>
-                <div class="metric-label">Coverage Rate</div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Key Trends</div>
             </div>
         </div>
 
-        <div class="dashboard">
-            <div class="chart-container">
-                <h3 class="chart-title">Topic Importance Distribution</h3>
-                <canvas id="importanceChart"></canvas>
+        <div class="controls">
+            <button class="expand-all" onclick="expandAll()">Expand All Topics</button>
+            <button class="collapse-all" onclick="collapseAll()">Collapse All Topics</button>
+        </div>
+
+        <div class="main-grid">
+            <!-- Bangla Language & Literature -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon bangla">বা</div>
+                    Bangla Language & Literature (বাংলা ভাষা ও সাহিত্য)
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Grammar (ব্যাকরণ)
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Sandhi (সন্ধি)</div>
+                            <div class="subtopic-details">Rules for breaking down words (e.g., 'রবীন্দ্র', 'দুরবস্থা')</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Samas (সমাস)</div>
+                            <div class="subtopic-details">Various compounds: Bahubrihi, Karmadharay, Upapad Tatpurush</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Spelling (বানান)</div>
+                            <div class="subtopic-details">Correct spellings: 'বন্ধন', 'কুসংস্কার', 'প্রোজ্জ্বল', 'মনোকষ্ট', 'মুমূর্ষু'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Word Classification & Origin</div>
+                            <div class="subtopic-details">Tatsam, Tadbhav, Deshi, Bideshi ('বাবা' from Turkish, 'হরতাল' from Gujarati, 'গির্জা' from Portuguese)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Phonology & Morphology</div>
+                            <div class="subtopic-details">অক্ষর বিন্যাস, যুক্তবর্ণ, মাত্রাযুক্ত/মাত্রাহীন বর্ণ, ধ্বনি বিপর্যয়, অপিনিহিতি</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Prefixes & Suffixes</div>
+                            <div class="subtopic-details">উপসর্গ ও প্রত্যয়: 'উপ', 'অভাব', Krit-Prottay, Taddhit Prottay</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Idioms & Phrases</div>
+                            <div class="subtopic-details">'অর্ধচন্দ্র', 'শিবে সংক্রান্তি', 'শরতের শিশির', 'Null and Void', 'Attested'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Sentence Structure</div>
+                            <div class="subtopic-details">Negation transformation, Jougik, Jotil sentences, সার্থক বাক্য qualities</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Literature (সাহিত্য)
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Medieval & Ancient Literature</div>
+                            <div class="subtopic-details">Chorjapad (discovery, poets, location), Vaishnava Padavali (Vidyapati, Jaydeb)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Rabindranath Tagore</div>
+                            <div class="subtopic-details">Novels: 'চোখের বালি', 'ঘরে বাইরে', 'চতুরঙ্গ'; Poems: 'সোনার তরী', 'অনন্ত প্রেম'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Kazi Nazrul Islam</div>
+                            <div class="subtopic-details">'অগ্নি-বীণা', 'বিষের বাঁশি', 'কুহেলিকা', 'আমার পথ', 'কালাপাহাড়'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Mir Mosharraf Hossain</div>
+                            <div class="subtopic-details">'বিষাদসিন্ধু', 'গাজী মিয়াঁর বস্তানী'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Liberation War Literature</div>
+                            <div class="subtopic-details">'বন্দী শিবির থেকে', 'আগুনের পরশমণি', 'জীবন ও রাজনৈতিক বাস্তবতা', 'নাঢ়াই'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Literary Figures & Pseudonyms</div>
+                            <div class="subtopic-details">D. Hayat Mahmud, Dr. Soumitra Shekhar, Sukumara Sen, 'বীরবল', 'কালকূট', 'নীল লোহিত'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Literary Magazines & Movements</div>
+                            <div class="subtopic-details">'সবুজপত্র', 'শনিবারের চিঠি', 'বুদ্ধির মুক্তি আন্দোলন', 'গ্রাম থিয়েটার'</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="chart-container">
-                <h3 class="chart-title">Subtopic Complexity Analysis</h3>
-                <canvas id="complexityChart"></canvas>
+
+            <!-- English Language & Literature -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon english">EN</div>
+                    English Language & Literature
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Grammar
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Parts of Speech</div>
+                            <div class="subtopic-details">Noun, adjective, adverb, preposition, conjunction, determiner, gerund, participle, infinitive</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Tenses & Verb Forms</div>
+                            <div class="subtopic-details">Verb tenses, conditional sentences, subject-verb agreement</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Prepositions</div>
+                            <div class="subtopic-details">Filling blanks with appropriate prepositions (highly common)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Voice (Active/Passive)</div>
+                            <div class="subtopic-details">Converting sentences between active and passive voice</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Sentence Structure & Transformation</div>
+                            <div class="subtopic-details">Simple, complex, compound sentences and transformations</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Plurals</div>
+                            <div class="subtopic-details">Irregular plurals: 'sheep', 'louse', 'ovum', same singular/plural forms</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Spelling</div>
+                            <div class="subtopic-details">Identifying correctly and incorrectly spelled words</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Vocabulary
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Synonyms & Antonyms</div>
+                            <div class="subtopic-details">'initiative', 'transitory', 'frugal', 'deleterious', 'terse', 'dearth', 'magnanimous'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Idioms & Phrases</div>
+                            <div class="subtopic-details">'Achilles' heel', 'A stitch in time saves nine', 'Once in a Blue Moon', 'cold shoulder'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">One-word Substitutions</div>
+                            <div class="subtopic-details">'omnivorous', 'euphemism', 'philanthropy', 'panacea', 'soporific', 'verbose'</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Literature
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">William Shakespeare</div>
+                            <div class="subtopic-details">'Hamlet', 'Macbeth', 'The Merchant of Venice', 'King Lear', 'The Tempest', 'Shylock', 'Caliban'</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Romantic Poets</div>
+                            <div class="subtopic-details">William Wordsworth, P.B. Shelley, John Keats, S.T. Coleridge</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Victorian Era Authors</div>
+                            <div class="subtopic-details">Charles Dickens ('David Copperfield'), Thomas Hardy ('Tess of the D'Urberville'), Alfred Tennyson</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Modern & Contemporary</div>
+                            <div class="subtopic-details">T.S. Eliot ('Gerontion'), G.B. Shaw ('Pygmalion'), James Joyce ('Ulysses'), H.G. Wells</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Literary Terms</div>
+                            <div class="subtopic-details">Alliteration, simile, epic, elegy, picaresque novel, mock-heroic poem</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mathematics -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon math">∑</div>
+                    Mathematics
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Core Mathematical Areas
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Algebra</div>
+                            <div class="subtopic-details">Linear and quadratic equations, inequalities, logarithms, exponents</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Arithmetic/Number Theory</div>
+                            <div class="subtopic-details">Percentages (profit/loss, VAT), simple/compound interest, ratios, LCM/GCD, prime numbers</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Sequences & Series</div>
+                            <div class="subtopic-details">Arithmetic and geometric progressions, finite and infinite series sums</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Geometry</div>
+                            <div class="subtopic-details">Triangles (angles, area, types), squares (area, diagonal), circles (area, circumference, chords)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Set Theory</div>
+                            <div class="subtopic-details">Union, intersection, difference, power sets</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Probability & Combinatorics</div>
+                            <div class="subtopic-details">Permutations, combinations, probability of events</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Science -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon science">⚗️</div>
+                    Science
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Physics
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Light & Optics</div>
+                            <div class="subtopic-details">Reflection, primary colors, light year</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Electricity</div>
+                            <div class="subtopic-details">Circuits, resistance, energy consumption, AC/DC</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Sound & Forces</div>
+                            <div class="subtopic-details">Speed of sound in vacuum, forces, heat engines</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Chemistry
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Elements & Compounds</div>
+                            <div class="subtopic-details">Atomic numbers, isotopes, chemical formulas, molecular structure</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Chemical Reactions</div>
+                            <div class="subtopic-details">Oxidation, acid-carbonate reactions</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Environmental Chemistry</div>
+                            <div class="subtopic-details">Pollutants, greenhouse gases, ozone layer, ceramics, soap</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Biology
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Human Body Systems</div>
+                            <div class="subtopic-details">Blood components, heart, brain functions</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Health & Disease</div>
+                            <div class="subtopic-details">Vitamins, viral/bacterial diseases, cancer, dengue, measles</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Genetics & Proteins</div>
+                            <div class="subtopic-details">Genetic principles, amino acids, protein structure</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Plant Biology</div>
+                            <div class="subtopic-details">Photosynthesis, plant types, plant anatomy</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Environmental Science
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Climate Change</div>
+                            <div class="subtopic-details">Causes, impacts, Paris Agreement, Kyoto Protocol, COP summits</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Natural Disasters</div>
+                            <div class="subtopic-details">Tsunami, floods, earthquakes, disaster management</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Pollution</div>
+                            <div class="subtopic-details">Air pollution, water quality management</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Computer Science & ICT -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon computer">💻</div>
+                    Computer Science & ICT
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Hardware
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Memory Types</div>
+                            <div class="subtopic-details">RAM, ROM, Cache, SSD, Flash, non-volatile memory, access time, addressing</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">CPU Components</div>
+                            <div class="subtopic-details">ALU (Arithmetic Logic Unit), registers, buses</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Software
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Operating Systems</div>
+                            <div class="subtopic-details">Types, multi-tasking, boot process, scheduling</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Programming Languages</div>
+                            <div class="subtopic-details">3G languages, machine language, open source programming</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Networking & Internet
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Protocols</div>
+                            <div class="subtopic-details">TCP/IP, HTTP/S, SMTP, DNS, GPRS, H.323</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Network Types</div>
+                            <div class="subtopic-details">LAN, WAN, PAN, Bluetooth, Wi-Fi, Wi-Max</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Network Devices</div>
+                            <div class="subtopic-details">Routers, hubs, gateways, firewalls</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Cybersecurity
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Malware Types</div>
+                            <div class="subtopic-details">Viruses, worms, ransomware, spyware, Trojan Horse</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Cyber Attacks</div>
+                            <div class="subtopic-details">Phishing, Denial of Service attacks</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Security Measures</div>
+                            <div class="subtopic-details">Firewalls, security protocols</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Advanced Topics
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Databases</div>
+                            <div class="subtopic-details">DBMS, relational databases, SQL</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Cloud Computing</div>
+                            <div class="subtopic-details">Service models and characteristics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bangladesh Affairs -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon bangladesh">🇧🇩</div>
+                    Bangladesh Affairs
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        History & Independence
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Language Movement</div>
+                            <div class="subtopic-details">Key events, dates, Tamaddun Majlish, cultural impact, songs</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">6-Dofa Movement</div>
+                            <div class="subtopic-details">Declaration date, significance, economic demands</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Liberation War</div>
+                            <div class="subtopic-details">Mujibnagar Government, Bangabandhu's 7 March Speech, declaration of independence, 'জীবন থেকে নেওয়া', Birshresthas</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Ancient & Medieval Bengal</div>
+                            <div class="subtopic-details">Janapads (Pundro, Harikel, Bongo, Somotat), rulers (Shoshangko, Murshid Kuli Khan), Sompur Mahabihar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Constitution & Governance
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Constitutional Articles</div>
+                            <div class="subtopic-details">Fundamental rights (equality, religious freedom), PSC, foreign policy articles</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Government Structure</div>
+                            <div class="subtopic-details">President/PM powers, National Parliament, election processes (voter age, candidacy)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Judiciary & Law Enforcement</div>
+                            <div class="subtopic-details">Supreme Court role, Attorney General functions</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Local Government</div>
+                            <div class="subtopic-details">Types and functions of local government bodies</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Economy
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">GDP & National Income</div>
+                            <div class="subtopic-details">Sectoral contributions, growth rates</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Revenue & Taxation</div>
+                            <div class="subtopic-details">Government revenue sources (VAT, income tax)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Trade & Investment</div>
+                            <div class="subtopic-details">Export/import partners, EPZs, foreign exchange reserves</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Development Plans</div>
+                            <div class="subtopic-details">Five-Year Plans, Perspective Plans, Delta Plan 2100</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Geography & Environment
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Rivers & Water Bodies</div>
+                            <div class="subtopic-details">Major rivers (Meghna, Jamuna), Halda river (carp spawn), GK project</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Forests & Natural Resources</div>
+                            <div class="subtopic-details">Sundarbans, Shal forests, gas fields, coal, jute, tea gardens</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Disasters</div>
+                            <div class="subtopic-details">Flood types, drought-prone areas, disaster management (forecasting, mitigation)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Demography & Society
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Census Data</div>
+                            <div class="subtopic-details">First census, population density, literacy rates, household size</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Ethnic Groups</div>
+                            <div class="subtopic-details">Garo, Chakma, Manipuri, Oraon, Pangon - identification, location, culture</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Social Welfare</div>
+                            <div class="subtopic-details">Old age allowance programs</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Miscellaneous
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">National Symbols</div>
+                            <div class="subtopic-details">Flag, emblem, national anthem</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Important Institutions</div>
+                            <div class="subtopic-details">BSTI (Bangladesh Standards and Testing Institution), NIPORT</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Sports & Culture</div>
+                            <div class="subtopic-details">Cricket achievements, cultural figures (Novera Ahmed)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- International Affairs -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon international">🌍</div>
+                    International Affairs
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        International Organizations
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">United Nations</div>
+                            <div class="subtopic-details">Founding members, General Assembly, agencies (UNDP, WHO, UNEP, UNCTAD, UNHCR, UNODC, UNICEF), IPCC</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Financial Organizations</div>
+                            <div class="subtopic-details">World Bank, IMF (International Monetary Fund)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Regional Organizations</div>
+                            <div class="subtopic-details">SAARC (establishment, HQ), ASEAN, OIC (Bangabandhu's participation), NAM, BRICS</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">NGOs & Advocacy</div>
+                            <div class="subtopic-details">Transparency International, Amnesty International, ILO</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Global Issues & Development
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Sustainable Development Goals</div>
+                            <div class="subtopic-details">Number of SDGs, specific targets and indicators</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Climate Change</div>
+                            <div class="subtopic-details">Kyoto Protocol, Paris Agreement, Montreal Protocol, COP summits, Green Climate Fund</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Human Rights</div>
+                            <div class="subtopic-details">Universal Declaration, relevant organizations</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Global Indices</div>
+                            <div class="subtopic-details">Global Peace Index, Global Terrorism Index</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Geopolitics & Conflicts
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Historical Conflicts</div>
+                            <div class="subtopic-details">Korean Crisis, Thirty Years' War, Cold War era (SDI, Buffer states)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Contemporary Conflicts</div>
+                            <div class="subtopic-details">Rohingya crisis, Azerbaijan-Armenia conflict, South China Sea disputes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        International Treaties & Pacts
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Major Treaties</div>
+                            <div class="subtopic-details">UNCLOS, ABM Treaty, Camp David Accords, Schengen Agreement</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Countries & Regions
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Geographic Features</div>
+                            <div class="subtopic-details">Countries with most borders, landlocked countries, major cities (Aleppo, Djibouti)</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Regional Organizations</div>
+                            <div class="subtopic-details">Regional blocs and their member countries</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Significant Events & Personalities
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Historical Events</div>
+                            <div class="subtopic-details">October Revolution, Arab Spring</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Key Figures</div>
+                            <div class="subtopic-details">Historical leaders and their contributions</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Major Summits</div>
+                            <div class="subtopic-details">G-20, Munich Security Conference</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ethics, Morality & Good Governance -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon ethics">⚖️</div>
+                    Ethics, Morality & Good Governance
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Core Concepts
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Good Governance</div>
+                            <div class="subtopic-details">World Bank's pillars, UNDP's elements, definition and components</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Rule of Law</div>
+                            <div class="subtopic-details">Legal frameworks and enforcement mechanisms</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Transparency & Accountability</div>
+                            <div class="subtopic-details">Public sector transparency, accountability mechanisms</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Participation</div>
+                            <div class="subtopic-details">Citizen participation in governance</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Values</div>
+                            <div class="subtopic-details">Types, sources, characteristics, importance in society</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Ethics</div>
+                            <div class="subtopic-details">Moral principles, duty ethics, utilitarianism</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Philosophers & Theories
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Classical Philosophers</div>
+                            <div class="subtopic-details">Plato, Aristotle - their ethical theories</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Modern Philosophers</div>
+                            <div class="subtopic-details">Immanuel Kant, John Stuart Mill, Jeremy Bentham, Bertrand Russell</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Application
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Corruption</div>
+                            <div class="subtopic-details">Causes of corruption, prevention strategies</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Civil Service Ethics</div>
+                            <div class="subtopic-details">Ethical standards for public servants</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Societal Values</div>
+                            <div class="subtopic-details">Values in society and their impact</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mental Ability -->
+            <div class="subject-card">
+                <div class="subject-title">
+                    <div class="subject-icon mental">🧠</div>
+                    Mental Ability / Miscellaneous
+                </div>
+                
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Logical Reasoning
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Directions</div>
+                            <div class="subtopic-details">Walking directions, clock hand positions</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Series Completion</div>
+                            <div class="subtopic-details">Number series, alphabet series, mixed pattern sequences</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Pattern Recognition</div>
+                            <div class="subtopic-details">Visual puzzles, code-breaking, pattern identification</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Analogy</div>
+                            <div class="subtopic-details">Relationship-based reasoning, analogical thinking</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Odd One Out</div>
+                            <div class="subtopic-details">Identifying exceptions in groups</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Problem Solving
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Calendar Problems</div>
+                            <div class="subtopic-details">Date calculations, day finding</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Work and Time Problems</div>
+                            <div class="subtopic-details">Efficiency calculations, combined work</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Age-related Puzzles</div>
+                            <div class="subtopic-details">Age calculations, relationship between ages</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Permutation/Combination Problems</div>
+                            <div class="subtopic-details">Real-life scenarios (handshakes, arrangements)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Non-Verbal Reasoning
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Mirror Images</div>
+                            <div class="subtopic-details">Mirror images of words and figures</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-topic">
+                    <div class="main-topic-title" onclick="toggleSubtopics(this)">
+                        Miscellaneous
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="subtopics">
+                        <div class="subtopic">
+                            <div class="subtopic-title">Logical Deduction</div>
+                            <div class="subtopic-details">General logical reasoning, understanding relationships</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Family Trees</div>
+                            <div class="subtopic-details">Understanding family relationships</div>
+                        </div>
+                        <div class="subtopic">
+                            <div class="subtopic-title">Balancing Problems</div>
+                            <div class="subtopic-details">Weight and balance puzzles</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="detailed-breakdown">
-            <div class="topic-card bangla">
-                <div class="topic-header">
-                    <h3 class="topic-title">🇧🇩 Bangla Language & Literature</h3>
-                    <span class="importance-badge">15%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Grammar (ব্যাকরণ) - 8%</div>
-                        <div class="subtopic-details">Sandhi, Samas, Spelling, Word Classification, Phonology, Prefixes/Suffixes, Idioms, Sentence Structure</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Literature (সাহিত্য) - 7%</div>
-                        <div class="subtopic-details">Medieval/Ancient Literature, Modern Literature, Rabindranath, Nazrul, Liberation War Literature</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="topic-card english">
-                <div class="topic-header">
-                    <h3 class="topic-title">🇬🇧 English Language & Literature</h3>
-                    <span class="importance-badge">14%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Grammar - 6%</div>
-                        <div class="subtopic-details">Parts of Speech, Tenses, Prepositions, Voice, Sentence Structure, Plurals, Spelling</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Vocabulary - 4%</div>
-                        <div class="subtopic-details">Synonyms/Antonyms, Idioms & Phrases, One-word Substitutions</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Literature - 4%</div>
-                        <div class="subtopic-details">Shakespeare, Romantic Poets, Victorian Era, Modern Authors, Literary Terms</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="topic-card math">
-                <div class="topic-header">
-                    <h3 class="topic-title">🔢 Mathematics</h3>
-                    <span class="importance-badge">12%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Algebra - 3%</div>
-                        <div class="subtopic-details">Linear/Quadratic Equations, Inequalities, Logarithms, Exponents</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Arithmetic/Number Theory - 3%</div>
-                        <div class="subtopic-details">Percentages, Interest, Ratios, LCM/GCD, Number Properties</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Geometry - 2.5%</div>
-                        <div class="subtopic-details">Triangles, Squares, Circles, Area/Perimeter Calculations</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Other Areas - 3.5%</div>
-                        <div class="subtopic-details">Sequences/Series, Set Theory, Probability & Combinatorics</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="topic-card science">
-                <div class="topic-header">
-                    <h3 class="topic-title">🔬 Science</h3>
-                    <span class="importance-badge">11%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Physics - 3%</div>
-                        <div class="subtopic-details">Light, Electricity, Sound, Forces, Heat Engine</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Chemistry - 3%</div>
-                        <div class="subtopic-details">Elements, Compounds, Reactions, Environmental Chemistry</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Biology - 3%</div>
-                        <div class="subtopic-details">Human Body, Vitamins, Diseases, Genetics, Plant Biology</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Environmental Science - 2%</div>
-                        <div class="subtopic-details">Climate Change, Natural Disasters, Pollution</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="topic-card computer">
-                <div class="topic-header">
-                    <h3 class="topic-title">💻 Computer Science & ICT</h3>
-                    <span class="importance-badge">10%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Hardware - 2.5%</div>
-                        <div class="subtopic-details">Memory Types, CPU Components, Buses</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Software & OS - 2%</div>
-                        <div class="subtopic-details">Operating Systems, Programming Languages</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Networking & Internet - 3%</div>
-                        <div class="subtopic-details">Protocols, Network Types, Network Devices</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Security & Others - 2.5%</div>
-                        <div class="subtopic-details">Cybersecurity, Databases, Cloud Computing</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="topic-card bangladesh">
-                <div class="topic-header">
-                    <h3 class="topic-title">🇧🇩 Bangladesh Affairs</h3>
-                    <span class="importance-badge">16%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">History & Independence - 5%</div>
-                        <div class="subtopic-details">Language Movement, 6-Dofa, Liberation War, Ancient/Medieval Bengal</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Constitution & Governance - 3%</div>
-                        <div class="subtopic-details">Constitutional Articles, Government Structure, Judiciary</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Economy - 3%</div>
-                        <div class="subtopic-details">GDP, Revenue, Trade, Development Plans</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Geography & Environment - 2.5%</div>
-                        <div class="subtopic-details">Rivers, Forests, Natural Resources, Disasters</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Society & Culture - 2.5%</div>
-                        <div class="subtopic-details">Demographics, Ethnic Groups, National Symbols</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="topic-card international">
-                <div class="topic-header">
-                    <h3 class="topic-title">🌍 International Affairs</h3>
-                    <span class="importance-badge">12%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">International Organizations - 4%</div>
-                        <div class="subtopic-details">UN, World Bank, IMF, SAARC, ASEAN, OIC, BRICS</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Global Issues - 3%</div>
-                        <div class="subtopic-details">SDGs, Climate Change, Human Rights</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Geopolitics - 2.5%</div>
-                        <div class="subtopic-details">Conflicts, Treaties, Regional Politics</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Countries & Events - 2.5%</div>
-                        <div class="subtopic-details">Country Characteristics, Historical Events, Personalities</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="topic-card ethics">
-                <div class="topic-header">
-                    <h3 class="topic-title">⚖️ Ethics & Good Governance</h3>
-                    <span class="importance-badge">8%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Core Concepts - 4%</div>
-                        <div class="subtopic-details">Good Governance, Rule of Law, Transparency, Values, Ethics</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Philosophers & Theories - 2%</div>
-                        <div class="subtopic-details">Plato, Aristotle, Kant, Mill, Bentham, Russell</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Applications - 2%</div>
-                        <div class="subtopic-details">Corruption Prevention, Civil Service Ethics</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="topic-card mental">
-                <div class="topic-header">
-                    <h3 class="topic-title">🧠 Mental Ability</h3>
-                    <span class="importance-badge">12%</span>
-                </div>
-                <ul class="subtopic-list">
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Logical Reasoning - 5%</div>
-                        <div class="subtopic-details">Directions, Series, Patterns, Analogy, Odd One Out</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Problem Solving - 4%</div>
-                        <div class="subtopic-details">Calendar, Work & Time, Age Problems, Permutation/Combination</div>
-                    </li>
-                    <li class="subtopic-item">
-                        <div class="subtopic-title">Non-Verbal & Misc - 3%</div>
-                        <div class="subtopic-details">Mirror Images, Family Relations, Deduction</div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
+        <!-- Trends Section -->
         <div class="trends-section">
-            <h2 class="trends-title">📈 Key Trends Analysis (Sources 36-46)</h2>
+            <h2 class="trends-title">Key Trends in BCS Questions (Sources 36-46)</h2>
             
             <div class="trend-item">
-                <div class="trend-title">1. Comprehensive Coverage Consistency</div>
-                <div class="subtopic-details">All 9 major subject areas maintained across all sources with stable assessment approach (100% consistency rate)</div>
+                <div class="trend-title">1. Comprehensive Coverage</div>
+                <div class="trend-description">Each source covers all major subject areas (Bangla, English, Math, Science, Computer, Bangladesh GK, International GK, Ethics, Mental Ability), indicating a holistic assessment approach that remains stable across exams.</div>
             </div>
 
             <div class="trend-item">
-                <div class="trend-title">2. Core Concept Repetition with Variation</div>
-                <div class="subtopic-details">Fundamental topics remain constant while specific examples vary (85% concept retention, 70% example variation)</div>
+                <div class="trend-title">2. Repetitive Core Concepts with Varied Examples</div>
+                <div class="trend-description">Topics remain constant, but specific examples change. Grammar rules, basic algebra, fundamental computer components are always present. Deep understanding of core concepts is crucial over memorization of specific answers.</div>
             </div>
 
             <div class="trend-item">
-                <div class="trend-title">3. Enhanced Explanation Focus</div>
-                <div class="subtopic-details">Earlier sources (36-39) show 60% more detailed explanations compared to later sources, emphasizing learning reinforcement</div>
+                <div class="trend-title">3. Strong Emphasis on Explanations</div>
+                <div class="trend-description">Earlier sources (36-39) include detailed explanations with definitions, examples, historical context, and grammatical rules. This reinforces learning beyond just testing knowledge.</div>
             </div>
 
             <div class="trend-item">
-                <div class="trend-title">4. Literary Canon Emphasis</div>
-                <div class="subtopic-details">Canonical authors consistently appear: Tagore & Nazrul (90% frequency), Shakespeare & Romantic poets (85% frequency)</div>
+                <div class="trend-title">4. Literary Focus in Bangla and English</div>
+                <div class="trend-description">Consistent focus on canonical authors (Tagore, Nazrul, Shakespeare, Romantic poets), their major works, characters, and famous lines. Literary history and appreciation are highly important.</div>
             </div>
 
             <div class="trend-item">
-                <div class="trend-title">5. Contemporary Issues Integration</div>
-                <div class="subtopic-details">Each source includes current affairs updates with 15-20% questions marked as contemporary/time-sensitive</div>
+                <div class="trend-title">5. Integration of Contemporary Issues</div>
+                <div class="trend-description">Each source includes contemporary questions updated to reflect recent events. General knowledge requires staying current with national and international affairs.</div>
             </div>
 
             <div class="trend-item">
-                <div class="trend-title">6. Growing Ethics & Governance Focus</div>
-                <div class="subtopic-details">Ethics topics show increasing importance: 6% (sources 36-38) → 8% (sources 39-42) → 10% (sources 43-46)</div>
+                <div class="trend-title">6. Growing Importance of Good Governance & Ethics</div>
+                <div class="trend-description">Ethics, morality, and good governance questions appear consistently, reflecting their perceived importance in public service assessment.</div>
             </div>
 
             <div class="trend-item">
-                <div class="trend-title">7. Problem-Solving Skills Priority</div>
-                <div class="subtopic-details">Math & Mental Ability combined account for 24% with emphasis on application over theory (70% problem-solving vs 30% theoretical)</div>
+                <div class="trend-title">7. Problem-Solving Skills</div>
+                <div class="trend-description">Math and Mental Ability sections heavily rely on problem-solving skills rather than theoretical knowledge. Questions require logical deduction, quantitative reasoning, and formula application.</div>
             </div>
 
             <div class="trend-item">
-                <div class="trend-title">8. Technology & Science Relevance</div>
-                <div class="subtopic-details">ICT & Science maintain 21% combined weightage reflecting modern society importance with stable distribution across sources</div>
+                <div class="trend-title">8. ICT and Science Relevance</div>
+                <div class="trend-description">Both ICT and Science remain vital components covering fundamental concepts in hardware, software, networking, environmental science, physics, chemistry, and biology, reflecting modern society relevance.</div>
             </div>
         </div>
     </div>
 
     <script>
-        // Importance Chart
-        const ctx1 = document.getElementById('importanceChart').getContext('2d');
-        new Chart(ctx1, {
-            type: 'doughnut',
-            data: {
-                labels: ['Bangladesh Affairs', 'Bangla Lang & Lit', 'English Lang & Lit', 'Mental Ability', 'Mathematics', 'International Affairs', 'Science', 'Computer Science', 'Ethics & Governance'],
-                datasets: [{
-                    data: [16, 15, 14, 12, 12, 12, 11, 10, 8],
-                    backgroundColor: [
-                        '#DD6B20',
-                        '#E53E3E', 
-                        '#3182CE',
-                        '#38B2AC',
-                        '#38A169',
-                        '#319795',
-                        '#805AD5',
-                        '#D69E2E',
-                        '#E53E3E'
-                    ],
-                    borderWidth: 0,
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 15,
-                            usePointStyle: true,
-                            font: {
-                                size: 11
-                            }
-                        }
-                    }
-                }
+        function toggleSubtopics(element) {
+            const subtopics = element.parentNode.querySelector('.subtopics');
+            const icon = element.querySelector('.toggle-icon');
+            
+            if (subtopics.classList.contains('expanded')) {
+                subtopics.classList.remove('expanded');
+                icon.innerHTML = '▼';
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                subtopics.classList.add('expanded');
+                icon.innerHTML = '▲';
+                icon.style.transform = 'rotate(180deg)';
             }
-        });
+        }
 
-        // Complexity Chart
-        const ctx2 = document.getElementById('complexityChart').getContext('2d');
-        new Chart(ctx2, {
-            type: 'radar',
-            data: {
-                labels: ['Conceptual Depth', 'Memorization Required', 'Application Focus', 'Current Affairs', 'Problem Solving', 'Language Skills'],
-                datasets: [{
-                    label: 'High Priority Topics',
-                    data: [85, 70, 90, 80, 85, 75],
-                    backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                    borderColor: 'rgba(102, 126, 234, 1)',
-                    pointBackgroundColor: 'rgba(102, 126, 234, 1)',
-                    borderWidth: 2
-                }, {
-                    label: 'Medium Priority Topics',
-                    data: [70, 60, 75, 65, 70, 60],
-                    backgroundColor: 'rgba(118, 75, 162, 0.2)',
-                    borderColor: 'rgba(118, 75, 162, 1)',
-                    pointBackgroundColor: 'rgba(118, 75, 162, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
+        function expandAll() {
+            const allSubtopics = document.querySelectorAll('.subtopics');
+            const allIcons = document.querySelectorAll('.toggle-icon');
+            
+            allSubtopics.forEach(subtopic => {
+                subtopic.classList.add('expanded');
+            });
+            
+            allIcons.forEach(icon => {
+                icon.innerHTML = '▲';
+                icon.style.transform = 'rotate(180deg)';
+            });
+        }
 
-        
+        function collapseAll() {
+            const allSubtopics = document.querySelectorAll('.subtopics');
+            const allIcons = document.querySelectorAll('.toggle-icon');
+            
+            allSubtopics.forEach(subtopic => {
+                subtopic.classList.remove('expanded');
+            });
+            
+            allIcons.forEach(icon => {
+                icon.innerHTML = '▼';
+                icon.style.transform = 'rotate(0deg)';
+            });
+        }
+
+        // Add some hover effects and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.subject-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
     </script>
 </body>
 </html>
