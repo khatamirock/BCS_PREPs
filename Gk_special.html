@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCS GK Comprehensive Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+
+        .main-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .bangladesh-affairs {
+            border-left-color: #27ae60;
+        }
+
+        .international-affairs {
+            border-left-color: #3498db;
+        }
+
+        .science-tech {
+            border-left-color: #e74c3c;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .bangladesh-affairs .section-icon {
+            background: #27ae60;
+        }
+
+        .international-affairs .section-icon {
+            background: #3498db;
+        }
+
+        .science-tech .section-icon {
+            background: #e74c3c;
+        }
+
+        .subsection {
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .subsection:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .subsection-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .topic-list {
+            display: none;
+            margin-top: 10px;
+            padding-left: 15px;
+        }
+
+        .topic-list.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 300px;
+            }
+        }
+
+        .topic-item {
+            background: white;
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #495057;
+            border-left: 3px solid #dee2e6;
+            transition: all 0.2s ease;
+        }
+
+        .topic-item:hover {
+            border-left-color: #007bff;
+            background: #f0f8ff;
+        }
+
+        .trends-section {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .trends-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .trends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .trend-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .trend-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .trend-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .stats-bar {
+            background: #34495e;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .toggle-arrow {
+            float: right;
+            transition: transform 0.3s ease;
+        }
+
+        .subsection.active .toggle-arrow {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BCS General Knowledge (GK)</h1>
+            <p class="subtitle">Comprehensive Topic Structure & Visualization</p>
+        </div>
+
+        <div class="main-sections">
+            <!-- Bangladesh Affairs Section -->
+            <div class="section bangladesh-affairs">
+                <div class="section-title">
+                    <div class="section-icon">🇧🇩</div>
+                    <span>Bangladesh Affairs</span>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        History & Political Evolution 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Ancient Bengal: Early Janapads (Pundru, Harikel), historical places (Sompur Mahavihara)</div>
+                        <div class="topic-item">Colonial Era: British rule, Chhiattorer Monnontor, first independent Nawab, Bengal Partition</div>
+                        <div class="topic-item">Language Movement: Key dates, Tomoddun Majlish, Sarbodolio Kendrio Rashtrobhasha Sangram Parishad</div>
+                        <div class="topic-item">Independence Movement: Six-Point Movement, March 7th speech, Mujibnagar Government</div>
+                        <div class="topic-item">Post-Independence: First elections, census, OIC membership, Joliot Curie Peace Prize</div>
+                    </div>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        Governance & Constitution 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Constitutional Articles: Fundamental rights, 13th Amendment, PSC formation</div>
+                        <div class="topic-item">Government Structure: Unicameral parliament, President & PM roles, ECNEC</div>
+                        <div class="topic-item">Local Government: Types, good governance principles, anti-corruption measures</div>
+                    </div>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        Economy & Demographics 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Economic Indicators: GDP sectors, VAT revenue, export/import, specialized banks, EPZs</div>
+                        <div class="topic-item">Population & Society: Census data, ethnic groups (Garo, Manipuri, Pangon), social welfare</div>
+                        <div class="topic-item">Development Plans: Five-year plans, Perspective Plan, Delta Plan 2100</div>
+                    </div>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        Geography & Environment 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Physical Geography: Rivers (Halda), forests (Sundarbans, Shal), Pleistocene terraces</div>
+                        <div class="topic-item">Climate & Disasters: Flood types, drought-prone areas, disaster management</div>
+                        <div class="topic-item">Natural Resources: Gas fields, coal, minerals, renewable energy</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- International Affairs Section -->
+            <div class="section international-affairs">
+                <div class="section-title">
+                    <div class="section-icon">🌍</div>
+                    <span>International Affairs</span>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        International Organizations 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">UN System: Security Council, WHO, IMF, World Bank, UNDP, UNICEF, UNHCR, WIPO, ILO</div>
+                        <div class="topic-item">Regional Bodies: SAARC, NATO, ASEAN, BRICS, OIC, G-7, G-20, D-8</div>
+                        <div class="topic-item">Key Reports: World Development Report, headquarters locations</div>
+                    </div>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        Global Issues & Conflicts 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Climate Change: Kyoto Protocol, Paris Agreement, Montreal Protocol, COP conferences</div>
+                        <div class="topic-item">Human Rights: Amnesty International, World Human Rights Day, refugee issues, Black Lives Matter</div>
+                        <div class="topic-item">Conflicts & Diplomacy: Nagorno-Karabakh, Westphalia Peace Treaty, Trump-Kim summit</div>
+                    </div>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        World Geography & Economy 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Geographic Features: Continents, deserts, oceans, Suez Canal</div>
+                        <div class="topic-item">Economic Systems: Bretton Woods Institutions, Global Economic Forum, TIFA</div>
+                        <div class="topic-item">Historical Events: October Revolution, Arab Spring, ancient civilizations</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Science & Technology Section -->
+            <div class="section science-tech">
+                <div class="section-title">
+                    <div class="section-icon">🔬</div>
+                    <span>Science & Technology</span>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        Basic Sciences 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Physics: Light, energy concepts</div>
+                        <div class="topic-item">Chemistry: pH levels, elements</div>
+                        <div class="topic-item">Biology: Human body systems, diseases, nutrition</div>
+                    </div>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        Environmental Science 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Environmental Phenomena: Ozone layer</div>
+                        <div class="topic-item">Natural Resources: Conservation and management</div>
+                    </div>
+                </div>
+
+                <div class="subsection" onclick="toggleSubsection(this)">
+                    <div class="subsection-title">
+                        Applied Sciences 
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">Medical Advancements: Recent developments</div>
+                        <div class="topic-item">Space Exploration: Major missions and discoveries</div>
+                        <div class="topic-item">Renewable Energy: Technologies and applications</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number">60%</span>
+                <span class="stat-label">Bangladesh Focus</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">30%</span>
+                <span class="stat-label">International Affairs</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">10%</span>
+                <span class="stat-label">Science & Technology</span>
+            </div>
+        </div>
+
+        <div class="trends-section">
+            <div class="trends-title">📊 Key Trends & Observations</div>
+            <div class="trends-grid">
+                <div class="trend-item">
+                    <div class="trend-title">Strong Bangladesh Focus</div>
+                    <div class="trend-desc">Significant portion dedicated to national affairs, history, politics, economy, and geography</div>
+                </div>
+                
+                <div class="trend-item">
+                    <div class="trend-title">Current Affairs Integration</div>
+                    <div class="trend-desc">Consistent inclusion of recent events tagged as "contemporary" questions</div>
+                </div>
+                
+                <div class="trend-item">
+                    <div class="trend-title">Factual Recall Emphasis</div>
+                    <div class="trend-desc">Focus on specific dates, names, and quantitative data</div>
+                </div>
+                
+                <div class="trend-item">
+                    <div class="trend-title">International Bodies Knowledge</div>
+                    <div class="trend-desc">Major organizations, functions, and global impact frequently tested</div>
+                </div>
+                
+                <div class="trend-item">
+                    <div class="trend-title">Interdisciplinary Approach</div>
+                    <div class="trend-desc">Questions bridge multiple fields - history with economics, geography with environment</div>
+                </div>
+                
+                <div class="trend-item">
+                    <div class="trend-title">Governance & Ethics</div>
+                    <div class="trend-desc">Good governance, ethical principles, and public administration concepts</div>
+                </div>
+                
+                <div class="trend-item">
+                    <div class="trend-title">Environmental Awareness</div>
+                    <div class="trend-desc">Climate change, disasters, and SDGs as recurring themes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSubsection(element) {
+            const topicList = element.querySelector('.topic-list');
+            const isActive = element.classList.contains('active');
+            
+            // Close all other subsections in the same section
+            const section = element.closest('.section');
+            const allSubsections = section.querySelectorAll('.subsection');
+            allSubsections.forEach(sub => {
+                sub.classList.remove('active');
+                sub.querySelector('.topic-list').classList.remove('active');
+            });
+            
+            // Toggle current subsection
+            if (!isActive) {
+                element.classList.add('active');
+                topicList.classList.add('active');
+            }
+        }
+
+        // Add smooth scrolling and interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                section.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add click animation to topic items
+            const topicItems = document.querySelectorAll('.topic-item');
+            topicItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
